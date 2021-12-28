@@ -42,13 +42,9 @@ class DayScheduleListWidget<T extends IntervalRange> extends StatefulWidget {
     this.dragIndicatorBorderWidth,
     this.dragIndicatorColor,
     this.dragIndicatorBorderColor,
-    this.draggable = true,
     Key? key,
   })  : assert(hourHeight > 0, 'hourHeight must be != null and > 0'),
         super(key: key);
-
-  ///Flag to control draggable behavior
-  final bool draggable;
 
   ///DateTime that it represents.
   final DateTime referenceDate;
@@ -156,35 +152,34 @@ class _DayScheduleListWidgetState<S extends IntervalRange>
                 minimumMinuteInterval: minimumMinuteInterval,
               ),
             ),
-            if (widget.draggable)
-              Positioned(
-                top: 0,
-                right: 0,
-                left: 0,
-                bottom: 0,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTapUp: (TapUpDetails details) {
-                    try {
-                      final appointment = newAppointmentForTappedPosition(
-                        startPosition: details.localPosition,
-                        firstValidTimeList: validTimesList.first,
-                        lastValidTimeList: validTimesList.last,
-                        appointments: widget.appointments,
-                        unavailableIntervals: widget.unavailableIntervals,
-                      );
-                      widget.createNewAppointmentAt(appointment, null);
-                    } on UnavailableIntervalToAddAppointmentException {
-                      widget.createNewAppointmentAt(
-                        null,
-                        DayScheduleListWidgetErrors
-                            .unavailableIntervalToAddAppointment,
-                      );
-                    }
-                  },
-                  child: Container(),
-                ),
+            Positioned(
+              top: 0,
+              right: 0,
+              left: 0,
+              bottom: 0,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTapUp: (TapUpDetails details) {
+                  try {
+                    final appointment = newAppointmentForTappedPosition(
+                      startPosition: details.localPosition,
+                      firstValidTimeList: validTimesList.first,
+                      lastValidTimeList: validTimesList.last,
+                      appointments: widget.appointments,
+                      unavailableIntervals: widget.unavailableIntervals,
+                    );
+                    widget.createNewAppointmentAt(appointment, null);
+                  } on UnavailableIntervalToAddAppointmentException {
+                    widget.createNewAppointmentAt(
+                      null,
+                      DayScheduleListWidgetErrors
+                          .unavailableIntervalToAddAppointment,
+                    );
+                  }
+                },
+                child: Container(),
               ),
+            ),
             const Positioned(
               top: 0,
               left: 35,
