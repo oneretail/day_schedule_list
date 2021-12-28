@@ -21,13 +21,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double heightOne = 120;
-  double heightTwo = 180;
-  double heightThree = 200;
-
-  GlobalKey keyOne = GlobalKey();
-  GlobalKey keyTwo = GlobalKey();
-  GlobalKey keyThree = GlobalKey();
+  // double heightOne = 120;
+  // double heightTwo = 180;
+  // double heightThree = 200;
+  //
+  // GlobalKey keyOne = GlobalKey();
+  // GlobalKey keyTwo = GlobalKey();
+  // GlobalKey keyThree = GlobalKey();
 
   final List<MyAppointment> myAppointments = [
     MyAppointment(
@@ -85,15 +85,15 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           appointmentBuilder: _buildItem,
           unavailableIntervals: [
-            IntervalRange(
-                start: const TimeOfDay(hour: 0, minute: 0),
-                end: const TimeOfDay(hour: 8, minute: 30)),
-            IntervalRange(
-                start: const TimeOfDay(hour: 12, minute: 0),
-                end: const TimeOfDay(hour: 13, minute: 15)),
-            IntervalRange(
-                start: const TimeOfDay(hour: 18, minute: 0),
-                end: const TimeOfDay(hour: 22, minute: 30))
+            // IntervalRange(
+            //     start: const TimeOfDay(hour: 0, minute: 0),
+            //     end: const TimeOfDay(hour: 8, minute: 30)),
+            // IntervalRange(
+            //     start: const TimeOfDay(hour: 12, minute: 0),
+            //     end: const TimeOfDay(hour: 13, minute: 15)),
+            // IntervalRange(
+            //     start: const TimeOfDay(hour: 18, minute: 0),
+            //     end: const TimeOfDay(hour: 22, minute: 30))
           ],
         ));
   }
