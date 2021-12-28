@@ -5,12 +5,12 @@ import 'package:day_schedule_list/src/ui/valid_time_of_day_list_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../helpers/time_of_day_extensions.dart';
 import '../models/interval_range.dart';
 import 'day_schedule_list_widget_extensions.dart';
 import 'interval_containers/appointment_container/appointment_container.dart';
 import 'interval_containers/unavailable_interval_container.dart';
 import 'time_of_day_widget.dart';
-import '../helpers/time_of_day_extensions.dart';
 
 ///Signature of function to build your widget that represents an appointment.
 ///Never forget to consider the parameter height, it is the available space you
@@ -42,9 +42,13 @@ class DayScheduleListWidget<T extends IntervalRange> extends StatefulWidget {
     this.dragIndicatorBorderWidth,
     this.dragIndicatorColor,
     this.dragIndicatorBorderColor,
+    this.draggable = true,
     Key? key,
   })  : assert(hourHeight > 0, 'hourHeight must be != null and > 0'),
         super(key: key);
+
+  ///Flag to control draggable behavior
+  final bool draggable;
 
   ///DateTime that it represents.
   final DateTime referenceDate;
@@ -152,34 +156,35 @@ class _DayScheduleListWidgetState<S extends IntervalRange>
                 minimumMinuteInterval: minimumMinuteInterval,
               ),
             ),
-            Positioned(
-              top: 0,
-              right: 0,
-              left: 0,
-              bottom: 0,
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTapUp: (TapUpDetails details) {
-                  try {
-                    final appointment = newAppointmentForTappedPosition(
-                      startPosition: details.localPosition,
-                      firstValidTimeList: validTimesList.first,
-                      lastValidTimeList: validTimesList.last,
-                      appointments: widget.appointments,
-                      unavailableIntervals: widget.unavailableIntervals,
-                    );
-                    widget.createNewAppointmentAt(appointment, null);
-                  } on UnavailableIntervalToAddAppointmentException {
-                    widget.createNewAppointmentAt(
-                      null,
-                      DayScheduleListWidgetErrors
-                          .unavailableIntervalToAddAppointment,
-                    );
-                  }
-                },
-                child: Container(),
+            if (widget.draggable)
+              Positioned(
+                top: 0,
+                right: 0,
+                left: 0,
+                bottom: 0,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTapUp: (TapUpDetails details) {
+                    try {
+                      final appointment = newAppointmentForTappedPosition(
+                        startPosition: details.localPosition,
+                        firstValidTimeList: validTimesList.first,
+                        lastValidTimeList: validTimesList.last,
+                        appointments: widget.appointments,
+                        unavailableIntervals: widget.unavailableIntervals,
+                      );
+                      widget.createNewAppointmentAt(appointment, null);
+                    } on UnavailableIntervalToAddAppointmentException {
+                      widget.createNewAppointmentAt(
+                        null,
+                        DayScheduleListWidgetErrors
+                            .unavailableIntervalToAddAppointment,
+                      );
+                    }
+                  },
+                  child: Container(),
+                ),
               ),
-            ),
             const Positioned(
               top: 0,
               left: 35,
@@ -201,7 +206,10 @@ class _DayScheduleListWidgetState<S extends IntervalRange>
 
   List<UnavailableIntervalContainer> _buildUnavailableIntervalsWidgetList(
       {required double insetVertical}) {
-    final List<IntervalRange> unavailableSublist = buildInternalUnavailableIntervals(unavailableIntervals: widget.unavailableIntervals,);
+    final List<IntervalRange> unavailableSublist =
+        buildInternalUnavailableIntervals(
+      unavailableIntervals: widget.unavailableIntervals,
+    );
     return unavailableSublist.map((IntervalRange interval) {
       return UnavailableIntervalContainer(
         interval: interval,
