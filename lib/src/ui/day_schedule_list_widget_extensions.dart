@@ -1,19 +1,20 @@
 import 'package:day_schedule_list/src/models/exceptions.dart';
-import 'package:day_schedule_list/src/ui/interval_containers/appointment_container/dynamic_height_container.dart';
 import 'package:day_schedule_list/src/ui/interval_containers/appointment_container/appointment_container.dart';
+import 'package:day_schedule_list/src/ui/interval_containers/appointment_container/dynamic_height_container.dart';
 import 'package:flutter/material.dart';
+
+import '../helpers/date_time_extensions.dart';
+import '../helpers/time_of_day_extensions.dart';
 import '../models/interval_range.dart';
 import '../models/minute_interval.dart';
 import '../models/schedule_item_position.dart';
 import 'day_schedule_list_widget.dart';
 import 'interval_containers/appointment_container_overlay.dart';
 import 'time_of_day_widget.dart';
-import '../helpers/time_of_day_extensions.dart';
-import '../helpers/date_time_extensions.dart';
 
 mixin DayScheduleListWidgetMethods {
   final MinuteInterval minimumMinuteInterval = MinuteInterval.one;
-  final MinuteInterval appointmentMinimumDuration = MinuteInterval.fifteen;
+  final MinuteInterval appointmentMinimumDuration = MinuteInterval.thirty;
 
   double get hourHeight => 0;
 
@@ -162,7 +163,7 @@ mixin DayScheduleListWidgetMethods {
             .add(Duration(minutes: endDeltaInMinutes));
     final TimeOfDay newEnd = TimeOfDay.fromDateTime(endDateTime);
 
-    if(newStart < newEnd) {
+    if (newStart < newEnd) {
       return IntervalRange(start: newStart, end: newEnd);
     }
     return IntervalRange(start: start, end: end);
@@ -181,10 +182,15 @@ mixin DayScheduleListWidgetMethods {
   }) {
     List<ScheduleTimeOfDay> validTimesList = [];
     final verifyUnavailableIntervals = unavailableIntervals.isNotEmpty;
-    for (var item = 0; item < 25; item++) {
+    for (var item = 0; item < 49; item++) {
       final hasTimeBefore = item > 0;
-      final TimeOfDay time =
-          TimeOfDay(hour: item == 24 ? 23 : item, minute: item == 24 ? 59 : 0);
+      final TimeOfDay time = TimeOfDay(
+          hour: (item == 48 || item == 47) ? 23 : (item / 2).floor(),
+          minute: item == 48
+              ? 59
+              : item % 2 == 0
+                  ? 0
+                  : 30);
       if (verifyUnavailableIntervals) {
         final IntervalRange first = unavailableIntervals.first;
         final IntervalRange last = unavailableIntervals.last;
@@ -341,16 +347,20 @@ mixin DayScheduleListWidgetMethods {
     final startDate = baseStartDate.add(
       Duration(minutes: startInMinutes - 30),
     );
-    final start = baseStartDate.isSameDay(dateTime: startDate) ? TimeOfDay.fromDateTime(
-      startDate,
-    ) : firstValidTimeList.time;
+    final start = baseStartDate.isSameDay(dateTime: startDate)
+        ? TimeOfDay.fromDateTime(
+            startDate,
+          )
+        : firstValidTimeList.time;
 
-    final baseEndDate = DateTime(now.year, now.month, now.day,
-        start.hour, start.minute, 0);
-    final endDate = baseEndDate.add(const Duration(hours: 1));
-    final end = endDate.isSameDay(dateTime: baseEndDate) ? TimeOfDay.fromDateTime(
-      endDate,
-    ) : lastValidTimeList.time;
+    final baseEndDate =
+        DateTime(now.year, now.month, now.day, start.hour, start.minute, 0);
+    final endDate = baseEndDate.add(const Duration(minutes: 30));
+    final end = endDate.isSameDay(dateTime: baseEndDate)
+        ? TimeOfDay.fromDateTime(
+            endDate,
+          )
+        : lastValidTimeList.time;
 
     IntervalRange? possibleNewAppointment =
         IntervalRange(start: start, end: end);
