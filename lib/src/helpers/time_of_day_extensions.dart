@@ -46,14 +46,17 @@ extension HelperMethods on TimeOfDay {
     return TimeOfDay.fromDateTime(newDate);
   }
 
-  TimeOfDay get roundMin => TimeOfDay(
-        minute: () {
-          if (minute < 30) {
-            return 0;
-          } else {
-            return 30;
-          }
-        }(),
-        hour: hour,
-      );
+  TimeOfDay get roundMin {
+    var _hour = hour;
+    var _min = minute;
+    if (minute < 30 && minute < 15) {
+      _min = 0;
+    } else if (minute < 45) {
+      _min = 30;
+    } else {
+      _hour++;
+      _min = 0;
+    }
+    return TimeOfDay(hour: _hour, minute: _min);
+  }
 }

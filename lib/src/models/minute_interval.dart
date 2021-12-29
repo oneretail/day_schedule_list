@@ -1,4 +1,4 @@
-enum MinuteInterval { one, five, ten, fifteen, twenty, thirty }
+enum MinuteInterval { one, five, ten, fifteen, twenty, thirty, twentyNine }
 
 extension NumberValue on MinuteInterval {
   int get numberValue {
@@ -15,6 +15,8 @@ extension NumberValue on MinuteInterval {
         return 20;
       case MinuteInterval.thirty:
         return 30;
+      case MinuteInterval.twentyNine:
+        return 29;
     }
   }
 }

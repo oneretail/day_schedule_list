@@ -14,7 +14,7 @@ import 'time_of_day_widget.dart';
 
 mixin DayScheduleListWidgetMethods {
   final MinuteInterval minimumMinuteInterval = MinuteInterval.one;
-  final MinuteInterval appointmentMinimumDuration = MinuteInterval.thirty;
+  final MinuteInterval appointmentMinimumDuration = MinuteInterval.twentyNine;
 
   double get hourHeight => 0;
 
@@ -345,12 +345,12 @@ mixin DayScheduleListWidgetMethods {
     final baseStartDate = DateTime(now.year, now.month, now.day,
         firstValidTimeList.time.hour, firstValidTimeList.time.minute, 0);
     final startDate = baseStartDate.add(
-      Duration(minutes: startInMinutes - 30),
+      Duration(minutes: startInMinutes - 29),
     );
     final start = baseStartDate.isSameDay(dateTime: startDate)
         ? TimeOfDay.fromDateTime(
             startDate,
-          )
+          ).roundMin
         : firstValidTimeList.time;
 
     final baseEndDate =
