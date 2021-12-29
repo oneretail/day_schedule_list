@@ -130,7 +130,7 @@ class _DayScheduleListWidgetState<S extends IntervalRange>
 
   @override
   Widget build(BuildContext context) {
-    const baseInsetVertical = 40.0;
+    const baseInsetVertical = 20.0;
     final insetVertical = baseInsetVertical +
         calculateTimeOfDayIndicatorsInset(timeOfDayWidgetHeight);
     return SingleChildScrollView(

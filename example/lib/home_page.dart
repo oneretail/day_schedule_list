@@ -1,14 +1,14 @@
 import 'package:day_schedule_list/day_schedule_list.dart';
+import 'package:day_schedule_list/src/helpers/time_of_day_extensions.dart';
 import 'package:flutter/material.dart';
 
 class MyAppointment extends IntervalRange {
   MyAppointment({
     required this.title,
     required TimeOfDay start,
-    required TimeOfDay end,
   }) : super(
-          start: start,
-          end: end,
+          start: start.roundMin,
+          end: start.roundMin.add(hours: 0, minutes: 29),
         );
 
   final String title;
@@ -33,22 +33,18 @@ class _MyHomePageState extends State<MyHomePage> {
     MyAppointment(
       title: 'Appointment 1',
       start: const TimeOfDay(hour: 8, minute: 40),
-      end: const TimeOfDay(hour: 9, minute: 40),
     ),
     MyAppointment(
       title: 'Appointment 2',
       start: const TimeOfDay(hour: 11, minute: 0),
-      end: const TimeOfDay(hour: 11, minute: 59),
     ),
     MyAppointment(
       title: 'Appointment 3',
       start: const TimeOfDay(hour: 14, minute: 15),
-      end: const TimeOfDay(hour: 15, minute: 0),
     ),
     MyAppointment(
       title: 'Appointment 4',
       start: const TimeOfDay(hour: 16, minute: 10),
-      end: const TimeOfDay(hour: 17, minute: 20),
     ),
   ];
 
@@ -76,11 +72,10 @@ class _MyHomePageState extends State<MyHomePage> {
               setState(() {
                 myAppointments.add(
                   MyAppointment(
-                      title: 'New appointment',
-                      start: interval.start,
-                      end: interval.end),
+                      title: 'New appointment', start: interval.start),
                 );
               });
+              print(myAppointments);
             }
           },
           appointmentBuilder: _buildItem,

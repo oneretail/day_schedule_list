@@ -26,21 +26,34 @@ extension HelperMethods on TimeOfDay {
         other == this;
   }
 
-  TimeOfDay add({required int hours,required int minutes}){
+  TimeOfDay add({required int hours, required int minutes}) {
     final now = DateTime.now();
-    final newDate = DateTime(now.year,now.month, now.day, hour, minute).add(Duration(
+    final newDate =
+        DateTime(now.year, now.month, now.day, hour, minute).add(Duration(
       hours: hours,
       minutes: minutes,
     ));
     return TimeOfDay.fromDateTime(newDate);
   }
 
-  TimeOfDay subtract({required int hours,required int minutes}){
+  TimeOfDay subtract({required int hours, required int minutes}) {
     final now = DateTime.now();
-    final newDate = DateTime(now.year,now.month, now.day, hour, minute).subtract(Duration(
+    final newDate =
+        DateTime(now.year, now.month, now.day, hour, minute).subtract(Duration(
       hours: hours,
       minutes: minutes,
     ));
     return TimeOfDay.fromDateTime(newDate);
   }
+
+  TimeOfDay get roundMin => TimeOfDay(
+        minute: () {
+          if (minute < 30) {
+            return 0;
+          } else {
+            return 30;
+          }
+        }(),
+        hour: hour,
+      );
 }
